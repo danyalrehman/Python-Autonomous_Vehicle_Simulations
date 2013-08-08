@@ -1,0 +1,90 @@
+(as ordered by 'git shortlog -sn TAG1..TAG2')
+
+MORSE 1.0
+---------
+Arnaud Degroote (LAAS-CNRS)
+Pierrick Koch (LAAS-CNRS)
+Séverin Lemaignan (LAAS-CNRS)
+Cyril Robin (LAAS-CNRS)
+Michael Karg (TUM-IAS)
+David Hodo (Auburn University)
+Charles Lesire-Cabaniols (ONERA)
+Gregoire Milliez (LAAS-CNRS)
+Serge Stinckwich (IRD / CNRS)
+
+
+MORSE 0.6
+---------
+Gilberto Echeverria (LAAS-CNRS)
+Séverin Lemaignan (LAAS-CNRS)
+Arnaud Degroote (LAAS-CNRS)
+Charles Lesire-Cabaniols (ONERA)
+Michael Karg (TUM-IAS)
+Pierrick Koch (ANR-PROTEUS.fr GREYC-CNRS)
+Sebastian Schmidt (TUM-IAS)
+Markus Sander (Ingolstadt University of Applied Sciences)
+Denis Štogl (Karlsruhe Institute of Technology)
+Thomas Moulard (LAAS-CNRS)
+Felix Ruess (DLR-RMC)
+Charles-Ivan Chesneau (ISAE)
+Jean-Guillaume Durand (ISAE)
+Houssam Assany (ISAE)
+Sylvestre Ledru (The Debian Project)
+
+MORSE 0.5
+---------
+Gilberto Echeverria
+Séverin Lemaignan
+Arnaud Degroote
+Pierrick Koch
+Michael Karg
+Charles Lesire-Cabaniols
+Sebastian Schmidt
+Redouane Boumghar
+Spencer Jackson
+
+MORSE 0.4
+---------
+Gilberto Echeverria
+Arnaud Degroote
+Séverin Lemaignan
+Michael Karg
+Pierrik Koch
+Peter Roelants
+Charles Lesire-Cabaniols
+David Hodo
+Simon Lacroix
+
+MORSE 0.3
+---------
+
+Gilberto Echeverria (LAAS-CNRS)
+Séverin Lemaignan (LAAS-CNRS)
+Michael Karg (TUM-IAS)
+Arnaud Degroote (LAAS-CNRS)
+Mamoun Gharbi (LAAS-CNRS)
+Simon Lacroix (LAAS-CNRS)
+
+MORSE 0.2
+---------
+
+Gilberto Echeverria (LAAS-CNRS)
+Séverin Lemaignan (LAAS-CNRS)
+Arnaud Degroote (LAAS-CNRS)
+Sinan Mouline (LAAS-CNRS)
+Charles Lesire (ONERA)
+Nicolas Lassabe (ONERA)
+Redouane Boumghar (LAAS-CNRS)
+Simon Lacroix (LAAS-CNRS)
+Lorenz Moesenlechner (TUM-IAS)
+
+MORSE 0.1
+---------
+
+Gilberto Echeverria (LAAS-CNRS)
+Arnaud Degroote (LAAS-CNRS)
+Séverin Lemaignan (LAAS-CNRS)
+Redouane Boumghar (LAAS-CNRS)
+Nicolas Lassabe (ONERA)
+Simon Lacroix (LAAS-CNRS)
+

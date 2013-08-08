@@ -1,0 +1,15 @@
+<package>
+  <description brief="morsetesting">
+
+	  morsetesting is an internal MORSE ROS package for
+	  testing purposes.
+
+  </description>
+  <author>MORSE team</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://morse.openrobots.org</url>
+  <depend package="pr2_controllers_msgs"/>
+</package>
+
+

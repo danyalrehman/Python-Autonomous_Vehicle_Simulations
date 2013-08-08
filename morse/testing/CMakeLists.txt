@@ -1,0 +1,21 @@
+macro(add_morse_test name)
+	set(full_name ${CMAKE_CURRENT_SOURCE_DIR}/${name})
+	string(REPLACE "${CMAKE_SOURCE_DIR}/testing/" "" test_name ${full_name})
+	add_test(NAME ${test_name} COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${name}.py)
+endmacro()
+
+if (BUILD_CORE_SUPPORT)
+	add_subdirectory(base)
+	add_subdirectory(robots/human)
+	add_subdirectory(robots/segway)
+	add_subdirectory(robots/pr2)
+	add_subdirectory(robots/pionner3dx)
+endif()
+
+if (BUILD_ROS_SUPPORT)
+	add_subdirectory(middlewares/ros)
+endif()
+
+if (BUILD_YARP2_SUPPORT)
+	add_subdirectory(middlewares/yarp)
+endif()

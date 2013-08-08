@@ -1,0 +1,505 @@
+MORSE 1.0
+=========
+
+General
+-------
+
+- MORSE is mature! stable release !
+- Unit-test coverage has been substentially improved
+- Documentation of component is now partially auto-generated: this should bring
+  a better, up-to-date, complete documentation, including code examples
+- MORSE has a new logo!
+
+Components
+----------
+
+- All components now explicitely expose their data fields and properties with
+  respectively `add_data` and `add_property`.
+- Introduced "abstraction levels" that allow to define several levels of
+  realism for a given component (#166). Many components remain to be ported to
+  use this interface, though.
+- Many component classes have been renamed to be more readable and match
+  Builder conventions
+- Creation and configuration of armatures in Blender, suitable for MORSE is now
+  properly documented.
+- Most of the component do not need a Blender file anymore (only the one with
+  complex meshes or armature are kept) (#221).
+- Blender file for components do not require any game property of logic brick
+  anymore. It is now fully created within the Builder API. This means that any
+  Blender model can be used as MORSE model, without specific configuration
+  (#241).
+- components can now be easily profiled for performance assessment from the
+  Builder API.
+
+Robot
++++++
+
+- Subsential improvement regarding the PR2 robot support. Besides 2D
+  navigation, the robot's joint state and joint control via standard tools like
+  `pr2_tuck_arm` works out-of-the-box. PR2 joint name have been updated to
+  match the latest version. Several scripts allow to create a PR2 with variable
+  level of equipement.
+- Fixed the `WheeledRobot` class of robot that had a erratic physics behaviour.
+  Make `Pioneer3DX` inherit from this robot class (#245).
+
+Actuators
++++++++++
+
+- Complete rewrite of the armature actuator. It can now track joints state
+  (interpolating joint rotation if required, and not only 'jumping' to the
+  target position) and execute trajectories with interpolation. It also
+  introduces support for prismatic joints (#231, #232).
+- `Waypoint` actuator: improve handeling of interruption (the robot motion now
+  actually stops).
+
+Sensors
++++++++
+
+- New sensor: depth camera (Thanks to Gilberto's patch in Blender 2.65), with
+  specialization like Kinect (#122, #123, #138). It uses Python 3.3
+  `memory_view` for fast, copy-less transfer of binary data between the OpenGL
+  buffers, the C processor, and the interface.
+- Laser sensors have been reorganized and grouped in one single category
+  (#155, #226).
+- Odometry now expose several abstraction levels (*raw*, *differential*,
+  *integrated*)
+- New sensor: armature pose. This sensor superseeds previous sensors like
+  `kuka_pose` or `pr2_posture` by proving a clean interface to armature states.
+- New sensor: Velodyne
+- New special *compound sensor* that allows to merge the output of several
+  sensors. Used for instance to merge the joints values of the different PR2
+  armature in a single joint state (#240).
+- Former `rosace` sensor has been renamed to a more approriate
+  `search_and_rescue` sensor.
+- Laser scanner ranges ordering has been reversed to match ROS conventions.
+
+Builder API
+-----------
+
+- One class per component: for instance, `Robot('atrv')` becomes `ATRV()`. The
+  documentation page of each component gives an example.
+- New `FakeRobot()` for clock and other static components (like environment
+  cameras).
+- Former functions `configure_mw` and `configure_service` replaced by new
+  `add_interface`, `add_datastream`, `add_service` or `add_default_interface`
+  that sets an interface for a whole robot (#217).
+- Components are now automatically renamed after the variable names used in the
+  Builder script, provide much more natural naming schemes. Names can still be
+  configured explicitely with `component.name` (#133).
+- Component profiling with `component.profile()`
+- Errors in Builder scripts are now better handled, with meaningful error
+  messages.
+- The simulation can now be configured from the Builder script for 3D output
+  (split screen), including configuration of eye separation.
+- Added ability to automatically save your scene as a Blender file from the
+  Builder script.
+- Added a `fastmode` option when setting up the environment: in *fastmode*,
+  only wireframes are displayed. This improves MORSE loading time and
+  performance, but some sensors (like cameras) won't work. Most of the
+  unit-tests now use this mode.
+
+.. warning::
+
+  It basically means that scene are incompatible between release 0.6 and 1.0.
+  To help the conversion, you can use the tool available `here
+  <https://raw.github.com/laas/morse/master/tools/convert_0.6_to_1.0.sh>`_
+  Basically, you can use it like that::
+
+		sh convert_0.6_to_1.0.sh your_scene.py > your_scene_1.0.py
+
+  You may need to edit the resulting file manually to fix last issues. If you
+  get in trouble, feel free to send us a mail on morse-users@laas.fr with your
+  scene.
+
+Assets
+------
+
+- Added a new `empty` environment, especially suited for tests.
+
+Interfaces
+----------
+
+- Interfaces can now implement data serialization/deserialization in explicit
+  classes: no more hacky appending of free functions (#144, #145).
+
+ROS
++++
+
+- GPS : cleaned, to be validated
+- Odometry now publish both Odometry and TF
+- Pose publish only Pose (no more Odometry)
+- Laser scanners can now export point clouds (`PointCloud2`)
+- New `PointCloud2` publisher for depth camera, Kinect in progress
+- Support for the JointTrajectory ROS action for armature control
+- Special unittest class for ROS tests that takes care of setting up an
+  appropriate ROS environment (including launching `roscore`).
+
+
+Sockets
++++++++
+
+- Support for cancelling asynchronous requests
+- Support for exporting matrices and 3D transformations
+
+pocolibs
+++++++++
+
+- Large rewrite of pocolibs interface, now using `ctypes` instead of SWIG
+  bindings. This simplies a lot the compilation and maintenance of these
+  interfaces.
+
+Text
+++++
+
+- Improved the `text` interface, to allow for instance output as `.csv` files.
+
+pymorse
++++++++
+
+The Python bindings for MORSE have been completely rewritten, now supporting a
+modern asynchronous interface (based on Python 3.2 *futures*). It is also
+deemed as feature complete: it supports discovery of the simulation components,
+synchronous/asynchronous service invokation (including service cancellation)
+and synchronous/asynchronous read/write of datastream (#216).
+
+MORSE unit-tests now use this new API.
+
+Internals
+---------
+
+- Substential changes in MORSE internals:
+  - lots of refactoring, to improve code consistency (including
+    {middleware->datastream} (#186))
+  - many files have been renamed for consistency
+
+Misc
+----
+
+- MORSE now uses the MORSE_RESOURCE_PATH environment variable to look after
+  custom location for assets: convenient to store your own model out of MORSE
+  tree (#187).
+- Added configuration file required by the Travis buildbot
+- Several large examples or tutorials have been removed (because either
+  deprecation or doubtful usefulness)
+- New CSS for documentation, based on GitHub *minimal* style.
+- Numerous bugfixes, including:
+    - the 'objects flying around' bug, that was due to the way Blender handle
+      transformation matrices (#139).
+    - a bug affecting the color of some materials
+    - bug with logging when restarting the simulation in special cases (#183)
+
+
+
+MORSE 0.6
+=========
+
+General
+-------
+
+- Compatibility with Blender from 2.59 to 2.64a.
+- MORSE is now compatible with Windows 32 and 64 bit. Thanks to Markus Sander
+  for providing the patches and testing
+- The 'morse' executable has slightly different options now. run 'morse -h' for
+  details.
+- Added support for 'no color' and 'reverse colors' log output.
+- Added support for specifying the geometry of the simulator window.
+- Unit-tests coverage improved
+- MORSE (core, ie with only socket support) is now packaged in Debian (and 
+  Ubuntu): morse-simulator
+
+User interface
+--------------
+
+- Possibility to configure and display the view from a simulated camera inside
+  the Blender screen
+- Reset the position of the global camera (CameraFP) by pressing F8
+
+Components
+----------
+
+Sensors
++++++++
+
+- Major rewriting of the IMU sensor and odometry sensor, which now returns more 
+  precise datas. While here, add some modifiers to allow more realistic
+  behaviour of such sensors.
+
+Actuators
++++++++++
+
+- New differential drive actuator associated to the previously mentioned
+  robots, called 'v_omega_diff_drive'. It converts a given v, omega into left
+  and right wheel speeds
+- Waypoint actuator can be configured to give target destination also in the Z
+  axis. Useful for helicopters and submarines
+
+Robots
+++++++
+
+- Several models for quadrotors, including more or less realistic controls
+  (using waypoints, stabilized fly model or directly in force). ROS support
+  rely on ASCTEC messages.
+- New more physically realistic robots: Segway RMP 400 and Pioneer 3-DX. Thanks
+  to David Hodo and Pierrick Koch for their work on the physics simulation
+- B21 robot model
+- New textured model for the Yamaha R-Max helicopter
+- Simple model of a submarine robot, along with an underwater environment
+
+Human simulation
+++++++++++++++++
+
+- Several behaviour fixes in the human control mode
+- Human avatar can now be correctly placed in the scene using the Builder API
+  scripts
+- New tutorial to learn how to control the human avatar
+- Documentation of simulation of multiple humans
+- Kinect-based control of the human in the simulator
+
+Misc
+++++
+
+- Corrections to the bounding boxes of buildings in outdoor scenarios. Also
+  added textures to the buildings
+- Dependencies on Blender Python API are now wrapped in a single file
+
+Middlewares
+-----------
+
+- Lots of improvements on ROS compatibility. Many new tutorials with detailed
+  explanations, including an update ROS navigation tutorial.
+- Corrections to YARP middleware, allowing it to export data stored as Python
+  lists
+- Improvements to the multi-node architecture using HLA. Including new
+  tutorials and documentation
+- Updated ROS support for fuerte compatibility
+
+Documentation
+-------------
+
+- Make table of contents of the components with images
+
+Misc
+----
+
+- Add methods in builder to configure UTM coordinates and temperature in the
+  scene. Previously in the Scene_Script_Holder
+
+
+MORSE 0.5
+=========
+
+General
+-------
+
+- MORSE 0.5 requires Blender >= 2.59 and < 2.62 (because of some changes in the
+  matrices handling - support for Blender >= 2.62 is expected for next release)
+- Lots of cleaning (middleware empties have been removed)
+- The command line ``morse run {scene.blend|scene.py}`` now works as expected (*i.e.*,
+  starts the simulation as soon as Blender opens).
+  Optional arguments can be added and are passed to the script
+- Unit-testing support for MORSE (cf doc: dev/testing). Added a target to the build file
+  ('make test').
+
+GUI
+---
+
+- First version of a graphical user interface to add components to a scene
+- Plugin for loading DTM/IGN data has been ported to Blender 2.5/Python 3.2
+
+Middlewares
+-----------
+
+- Support of ROS services. Partial support for ROS actions (cf commit 02fda)
+- The long-standing issue with the socket server (bug #162) has been solved. It
+  is now possible to listen to a socket stream without prior initialization.
+
+Builder API
+-----------
+
+- New export script (available as Blender add-on) to export a MORSE Blender
+  scene to the MORSE Builder format.
+- Added support for multi-node configuration in the builder API
+- Added support for static, passive objects
+- Many examples and tutorials have been converted to the Builder API.
+
+Components
+----------
+
+- Static objects have a redefined set of options to make them active or not,
+  graspable or not, etc. See :doc:`user/others/passive_objects`)
+- New components that can be created from the Builder API, such as:
+
+  - Infrared sensor
+  - Battery sensor
+  - Light switch actuator
+- Camera images can now be vertically flipped via the ``vertical_flip`` property
+
+Multi-node
+----------
+
+- New abstract API for multi-node implementation. The current socket-based and HLA
+  implementation now use it
+- This allows for having a single builder script to be used on all nodes. The
+  configuration of each node is done using the environment variable ``MORSE_NODE``
+
+HRI
+---
+
+Much work has been done in this domain:
+
+- New human avatar with a much improved behaviour/animation. It is controllable
+  from mouse + keyboard or Kinect (experimental)
+- The avatar features a 'manipulation mode' where objects can be picked and
+  dropped, and special objects like drawers and cupboards can be opened.
+- The human avatar can be easily added via the Builder API (instantiate the
+  'Human' class)
+
+
+
+MORSE 0.4.x - "Multinode" release
+=================================
+
+General changes
+---------------
+- Full support for Blender 2.59 and Python 3.2.
+- Reorganized the documentation, with a brand new main page.
+
+Architectural changes
+---------------------
+- Added infrastructure for multi-node functionality
+- Use the Builder API to create robots from their description in Python script
+- Changed directory structure and file names for ease of use of the Builder API
+- Use the Python logging interface
+
+Middlewares
+-----------
+- Added support for multiple middleware bindings per component
+- Added support for services through  Pocolibs middleware
+- ROS support for the robot's cameras
+- Added support for HLA middleware
+- Added support for MOOS middleware
+
+New components
+--------------
+- Added a Hummer robot that implements the Blender Vehicle Wrapper
+- Added a 'steer_force' actuator to control the Hummer robot
+- Added an 'armature_actuator' to control the bone structure in the LWR and PR2 robot arms
+
+User interface
+--------------
+- Add a help display with the keyboard shortcuts available during simulation. Activated by pressing the 'H' key
+
+MORSE 0.3 - "Itizpossible" release
+==================================
+
+General changes
+---------------
+- Added preliminary support for Blender 2.57 (with Python 3.2)
+- Removed support for Blender 2.49
+
+Architectural changes
+---------------------
+
+- MORSE now support *services* to configure components
+  and the general behaviour of the simulation at runtime. Services
+  can be either synchronous or asynchronous.
+- Addition of a variable to keep track of the time elapsed in seconds
+  since the simulation started.
+
+Middlewares
+-----------
+
+- Initial support for the ROS (http://www.ros.org) middleware.
+- ROS: Odometry, joint state and laser scanner sensors are exported using standard
+  messages.
+- Sockets: services (RPC) are available
+- YARP: services (RPC) are available
+
+New sensors/actuators
+---------------------
+
+- clever waypoint controller that avoids obstacles
+
+Simulation supervision
+----------------------
+
+- Add a shortcut to switch between camera during the simulation (F9)
+- Add a shortcut to replace all objects at their initial position without
+  relaunching the simulation (F11)
+- Add support for the Wiimote to control the human in HRI simulations
+  (external tool using socket-based requests)
+- Requests: ensure some working control of the simulation
+  based on the socket interface (only restart for now)
+
+MORSE 0.2 - The HRI release
+===========================
+
+General changes
+---------------
+
+- Switch to Blender 2.5: MORSE now officialy supports Blender 2.5x (x>=4) and 
+  the support for Blender 2.49 has been dropped.
+
+- This means that MORSE is now fully Python 3 compatible. New code must be from
+  now valid Python 3 code.
+
+- MORSE homepage is now http://morse.openrobots.org/
+
+- Documentation has been converted to reStructuredText. HTML version automatically updated
+  every hour to http://morse.openrobots.org/doc/
+
+- A MORSE bugtracker is now available: https://softs.laas.fr/bugzilla/buglist.cgi?product=morse
+
+Architectural changes
+---------------------
+
+- Components have "hooks" to export their data. Middleware lives in parallel
+  threads and "visit" the components. In this case, middlewares still lives
+  in the Python VM. Advantage: better decoupling ; middleware can dynamically
+  choose what they want to watch.
+
+- Add 'serialize' methods to the data of each component. This formats the 
+data according to the needs of each middleware/architecture.
+
+
+Support for human-robot interaction
+-----------------------------------
+
+- MORSE now offers a human model. It can be controlled in a "first person shooter"-like
+  mode, enabling immersive simulation of human-robot interaction:
+   - mouse-based interactive displacement and grasping of objects (using IK to ensure 
+     consistent, fully body motion)
+   - 40-DOF human posture (joint state) is exported by a new sensor called 'human_posture'
+
+New sensors/actuators
+---------------------
+
+- Support for the PA-10 and Kuka arms. They can be controlled either by specifying
+  a target that the arm tries to reach (using Blender ITASC IK solver) or by
+  sending a set of joint angles.
+
+- new simple waypoint controller: this 'high-level' controller allows to give 
+  only a list of waypoint to the robot. The simulator takes care of the navigation 
+  (currently, simple straight lines, without any sort of obstacle avoidance)
+
+- "Semantic camera" sensor: MORSE can export position, orientation and name 
+  of specifically marked objects that are visible by a camera.
+
+- we now have a fully simulated SICK laser sensor.
+
+Other features
+--------------
+
+- Possibility to control the camera when the game engine runs (with keyboard, 
+  mouse, or attach some view to some robots)
+- Support for Ubuntu 10.04 (hi Lorenz!)
+- Added LAAS Jido robot model with Kuka arm
+- fixed several issues with camera calibration in Blender
+- Added several posters for Genom middleware
+- Fixed the accelerometer sensor
+- fixed several issues with transformation coordinates
+
+MORSE v 0.1 - The outdoor robotics release - 28/07/2010
+=======================================================
+
+First version
