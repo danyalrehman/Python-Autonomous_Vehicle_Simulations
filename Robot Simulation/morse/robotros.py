@@ -11,10 +11,13 @@ atrv.append(pose)
 # Allows the velocity and angular velocity of the robot to be manipulated.
 motion = MotionVW()
 atrv.append(motion)
+imu = IMU()
 
 # Configures the socket middleware that can be changed to ROS.
 motion.add_default_interface('ros')
 pose.add_default_interface('ros')
+imu.translate()
+atrv.append(imu)
 
 # Creates the environment for the robot to function in.
 env = Environment('outdoors.blend')
