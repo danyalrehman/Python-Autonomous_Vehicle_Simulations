@@ -16,7 +16,7 @@ imu = IMU()
 # Configures the socket middleware that can be changed to ROS.
 motion.add_default_interface('ros')
 pose.add_default_interface('ros')
-imu.translate()
+imu.translate(x=0.9, y=0.0,z=0.2)
 atrv.append(imu)
 
 # Creates the environment for the robot to function in.
