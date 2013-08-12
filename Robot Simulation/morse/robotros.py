@@ -16,11 +16,11 @@ imu = IMU()
 # Configures the socket middleware that can be changed to ROS.
 motion.add_default_interface('ros')
 pose.add_default_interface('ros')
-imu.translate(x=0.9, y=0.0,z=0.2)
+imu.translate(x=0.9, y=0.0,z=0.1)
 atrv.append(imu)
 
 # Creates the environment for the robot to function in.
-env = Environment('outdoors.blend')
+env = Environment('outdoors')
 # Adds the camera and varies its angle.
 env.place_camera([5,-5,6])
 env.aim_camera([1.0470,0,0.7854])
