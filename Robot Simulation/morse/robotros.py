@@ -14,8 +14,8 @@ atrv.append(motion)
 imu = IMU()
 
 # Configures the socket middleware that can be changed to ROS.
-motion.add_default_interface('sockets')
-pose.add_default_interface('sockets')
+motion.add_default_interface('socket')
+pose.add_default_interface('socket')
 imu.translate(x=0.9, y=0.0,z=0.2)
 atrv.append(imu)
 
