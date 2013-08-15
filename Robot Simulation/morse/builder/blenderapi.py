@@ -2,7 +2,6 @@
 for all the cases we need to run MORSE code outside Blender (mostly for
 documentation generation purposes).
 """
-import pygame
 import sys
 
 fake = False
@@ -86,18 +85,10 @@ if not fake:
     XKEY = bge.events.XKEY
     ZKEY = bge.events.ZKEY
 
-    pygame.joystick.init()
-
-
-    joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
-
-    JOYUP = joysticks.JOYBUTTONUP
-    JOYDOWN = joysticks.JOYBUTTONDOWN
-    JOYRIGHT = joysticks.JOYBUTTONRIGHT
-    JOYLEFT = joysticks.JOYBUTTONLEFT
-
     LEFTMOUSE = bge.events.LEFTMOUSE
     RIGHTMOUSE = bge.events.RIGHTMOUSE
+
+
 
     F8KEY = bge.events.F8KEY
     F5KEY = bge.events.F5KEY
